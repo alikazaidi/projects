@@ -1,0 +1,246 @@
+#!/usr/bin/env python
+# coding: utf-8
+
+# # Importing Libraries
+
+# import pandas as pd
+# import os
+# from matplotlib import pyplot as plt
+# import numpy as np
+# import seaborn as sns
+
+# # Importing Data
+
+# In[19]:
+
+
+df1=pd.read_csv(r"C:\Users\alika\Downloads\car data all together.csv")
+df1
+
+
+# In[16]:
+
+
+plt.plot(df1['price'])
+plt.xticks(range(0,len(df1['price'])),df1['CarName'],rotation=90)
+plt.figure(figsize=(20,17))
+plt.show()
+
+
+# In[33]:
+
+
+sns.set(rc={'figure.figsize':(14,10)})
+ax=sns.lineplot(x='CarName',y='price',data=df1)
+ax.tick_params(axis='x', rotation=90)
+
+
+
+# In[40]:
+
+
+sns.set(rc={'figure.figsize':(14,10)})
+ax=sns.lineplot(x='CarName',y='price',hue='carbody',data=df1)
+ax.tick_params(axis='x', rotation=90)
+
+
+
+# In[46]:
+
+
+sedan_cars=df1[df1["carbody"]=='sedan'].reset_index(drop=True)
+sns.set(rc={'figure.figsize':(10,7)})
+ax=sns.lineplot(x='CarName',y='price',hue='cylindernumber',style='aspiration',data=sedan_cars)
+ax.tick_params(axis='x',rotation=90)
+
+
+# In[132]:
+
+
+ax=sns.barplot(x='carbody',y='price',data=df1)
+ax.bar_label(ax.containers[0])
+
+
+df1[['carbody','price']].groupby('carbody',as_index=False).mean()
+
+
+# In[133]:
+
+
+ax=sns.barplot(x='price',y='carbody',data=df1,orient='h')
+ax.bar_label(ax.containers[0])
+
+
+df1[['carbody','price']].groupby('carbody',as_index=False).mean()
+
+
+# In[113]:
+
+
+ax=sns.barplot(x='carbody',y='price',hue="fueltype",data=df1,ci=False)
+
+for i in ax.containers:
+    ax.bar_label(i)
+#ax.bar_label(ax.containers[0])
+#ax.bar_label(ax.containers[1])
+
+df1[['carbody','price']].groupby('carbody',as_index=False).mean()
+
+
+# In[137]:
+
+
+categories=['aspiration','doornumber','drivewheel','enginelocation','fuelsystem']
+
+for i in categories:
+    ax=sns.barplot(x=i,y='price',hue='fueltype',data=df1,palette=['#eabef2','#c6f2be'])
+    for c in ax.containers:
+        ax.bar_label(c)
+    plt.title(i)
+    plt.show()
+    
+    
+    
+#https://colorpicker.me/#c6f2be
+
+
+# In[145]:
+
+
+sns.distplot(df1['price'].values,color='#0e68eb')
+
+plt.axvline(df1['price'].mean(),0,1)
+
+
+# In[196]:
+
+
+numerics=['int16','int32','int64','float16','float32','float64']
+varr=df1[df1.select_dtypes(include=numerics).columns].reset_index(drop=True)
+
+for i in varr:
+    a=varr[i].values
+    sns.distplot(a,color="#06f74b")
+    plt.title(i)
+    plt.axvline(varr[i].mean(),color="red")
+    plt.show()
+    
+
+
+# In[208]:
+
+
+x=df1['price']
+ax=sns.boxplot(x=x)
+
+
+# In[206]:
+
+
+sns.boxplot(x='cylindernumber',y='price',data=df1)
+
+
+# In[218]:
+
+
+sns.boxplot(x='carbody',y='price',hue='fueltype',data=df1,palette='magma')
+
+
+# In[222]:
+
+
+sns.boxplot(x='carbody',y='price',hue='fueltype',data=df1,palette='magma')
+sns.swarmplot(x='carbody',y='price',hue='fueltype',data=df1)
+
+
+# In[234]:
+
+
+sns.scatterplot(y='price',x='wheelbase',hue='carbody',style='fueltype',size='horsepower',data=df1,s=27)
+
+
+# In[7]:
+
+
+sns.lmplot(x='price',y='horsepower',data=df1,height=6)
+
+
+# In[12]:
+
+
+sns.lmplot(x='price',y='horsepower',hue='carbody',data=df1,ci=False,height=6,markers=['o','x','+','^','.'])
+
+
+# In[23]:
+
+
+sns.lmplot(x='price',y='horsepower',data=df1,col='carbody',ci=True,
+           line_kws={'color':'red'},scatter_kws={'color':'yellow'},
+          col_wrap=2)
+
+
+# In[38]:
+
+
+fig, ax=plt.subplots(2,2,figsize=(18,13))
+
+sns.boxplot(x='price',y='carbody',color='#f2aec2',data=df1,ax=ax[0,0])
+sns.swarmplot(x='price',y='carbody',color='#aef2de',data=df1,ax=ax[0,0])
+
+sns.displot()
+
+
+
+
+
+# In[10]:
+
+
+sns.pairplot(df1[['price','wheelbase','enginesize','horsepower']],plot_kws={'color':'pink'})
+
+
+# In[43]:
+
+
+sns.pairplot(df1[['price','wheelbase','enginesize','horsepower','fueltype']],hue='fueltype',kind='reg')
+
+
+# In[65]:
+
+
+axes=sns.jointplot(x='price',y='enginesize',data=df1,kind='reg',height=6)
+axes.ax_joint.tick_params(axis='x',rotation=90)
+
+
+# In[75]:
+
+
+col=df1[['price','wheelbase','enginesize','horsepower']].corr()
+
+
+# In[77]:
+
+
+sns.heatmap(col,annot=True,xticklabels=col,yticklabels=col)
+
+
+# In[80]:
+
+
+numeric=['int16','int32','int64','float16','float32','float64']
+var=df1.select_dtypes(include=numeric).columns
+var
+
+
+# In[94]:
+
+
+cor=df1[var].corr()
+sns.heatmap(cor,annot=True,annot_kws={'size':5},cmap='Greens')
+
+
+# In[ ]:
+
+
+
+
